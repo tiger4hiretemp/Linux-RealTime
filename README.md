@@ -38,7 +38,8 @@ Yes, but the "steady_clock" is garanteed to be the same between CPUs/threads. Un
 
 # Building the code
 I use tup. The code will only work on linux, and tup only works on linux (and is extremely easy to use). You can install from "apt".
-> tup init
-> tup
-> sudo RTTests.exe
+> tup init  
+> tup  
+> sudo RTTests.exe  
+
 you need to be root to use realtime scheduling on Linux. If you don't trust me, there are other ways to run RT processes, see [here](https://unix.stackexchange.com/questions/736481/grant-permission-to-run-process-with-fifo)
