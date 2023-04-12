@@ -3,11 +3,11 @@
 I once worked on a project where we hit a problem...  We needed a highly available thread. The solution to that is to use a FIFO scheduled thread and to have it never yield. This thread is always available to deal with low-latency requests. (When doing this, you must be careful not to call OS level functions that yield the thread). This solved the problem. However, after a few minutes the system becomes unstable.
 After much head-scratching we decided the cause must have been the kworker-threads. These threads do work for the OS and the OS normally launches one per CPU. If you don't service these threads the OS slowly degrades...
 
-In the end, we produced a stable system, by inserting yields and hoping the control would be returned in-time to meet our hard deadlines. It worked, but hardly a rock-solid solution. As an alternative, we looked at Linux-RT OS's. These exist for a reason, common concensus is that Linux (non-RT) is simply unable to give garaunteed respnose-times. The scheduler is hard-coded to use a minimum-time quanta for scheduling. (I beleive that quanta is known as the Linux-Jiffy).
+In the end, we produced a stable system, by inserting yields and hoping the control would be returned in-time to meet our hard deadlines. It worked, but hardly a rock-solid solution. As an alternative, we looked at Linux-RT OS's. These exist for a reason, common concensus is that Linux (non-RT) is simply unable to give garaunteed response-times. The scheduler is hard-coded to use a minimum-time quanta for scheduling. (I beleive that quanta is known as the Linux-Jiffy, google it!).
 
-However, when trying these RealTime-OS's we quickly discovered that the hardware-driver support was minimal. Most hardware companies simplydon't think the market is big enough to develop drivers for RealTime Linux.
+However, when trying these RealTime-OS's we quickly discovered that the hardware-driver support was minimal. Most hardware companies simply don't think the market is big enough to develop drivers for RealTime Linux.
 
-Given the choice between an imperfect solution or having to write drivers for every piece of software, we picked the imperfect solution.
+Given the choice between an imperfect solution or having to write drivers for every piece of hardware, we picked the imperfect solution.
 
 However, it has always bugged me that you can't consume 100% of a CPU on Linux, even when running on a machine with many hardware threads.
 
