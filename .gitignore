@@ -1,0 +1,4 @@
+RTTests.exe
+.tup/**
+Intermediate/**
+Source/precompile.h.gch

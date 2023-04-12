@@ -1,0 +1,4 @@
+
+: Source/precompile.h |> g++ -I. -Wall -std=c++23 %f  |> Source/%B.h.gch
+: foreach Source/*.cpp |Source/precompile.h.gch |> g++ -g -O0 -I. -Wall -std=c++23 -c %f -o %o |> Intermediate/Source/%B.o
+: Intermediate/Source/*.o |> g++ %f -o %o -pthread -lgtest_main -lgtest |> RTTests.exe
