@@ -36,3 +36,9 @@ On my machine, that is around 6ms/10s, which seems acceptable.
 ## But wait... Dont CPU's have different clocks!
 Yes, but the "steady_clock" is garanteed to be the same between CPUs/threads. Unfortunately the steady clock is not very accurate. It might seem to be counter-intuative, but the accuracy of the clock is unimportant. This is due to the fact the the clock is not syncronised. Say the accuracy is 1s and the task takes 100ms. If you used it like a stop watch, starting the clock, stoping it, and adding the difference, you would always get 0. However, if you just glance a wall-clock, then it may be just about to "tick". It is now random whether the tick happens in 1ms or 999ms time. If you did your tests 100 times, you would expect the clock to tick over 10 times. 10/100 = 1/10 of a second, or 100ms. On average the time is still correct.
 
+# Building the code
+I use tup. The code will only work on linux, and tup only works on linux (and is extremely easy to use). You can install from "apt".
+> tup init
+> tup
+> sudo RTTests.exe
+you need to be root to use realtime scheduling on Linux. If you don't trust me, there are other ways to run RT processes, see [here](https://unix.stackexchange.com/questions/736481/grant-permission-to-run-process-with-fifo)
