@@ -1,3 +1,4 @@
+# Currently broken - It has significant gaps
 # Linux-RealTime
 
 I once worked on a project where we hit a problem...  We needed a highly available thread. The solution to that is to use a FIFO scheduled thread and to have it never yield. This thread is always available to deal with low-latency requests. (When doing this, you must be careful not to call OS level functions that yield the thread). This solved the problem. However, after a few minutes the system becomes unstable.
