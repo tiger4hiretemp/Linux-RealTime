@@ -31,6 +31,8 @@ void GetRTSchedulingPrio()
     sp.sched_priority = 99;
     if(sched_setscheduler(0, SCHED_FIFO, &sp))
         errExit("sched_setscheduler");
+    while (sched_getscheduler(0)!=SCHED_FIFO)
+        std::this_thread::yield();
 }
 
 void ReleaseRTSchedulingPrio()
@@ -99,7 +101,6 @@ void RealTimeEngine::ThreadWork(int cpu)
         std::cout << "Log Contents\n====================\n" << m_log.str() << "\n";;
     }
     assert(m_downtime[0].IsStopped());
-    assert(m_downtime[0].IsStopped());
     assert(m_downtime[1].IsStopped());
 }
 
@@ -109,14 +110,15 @@ TEST(RealTimeEngine, Initial)
     using namespace std::chrono_literals;
     using namespace std::chrono;
     using Clock = std::chrono::steady_clock;
-
-    RealTimeEngine engine{[](){
+    int reset_count{0};
+    RealTimeEngine engine{[&reset_count](){
         if (respond_now.load(std::memory_order_acquire) != 0)
         {
             const auto elapsed = duration_cast<milliseconds>(Clock::now().time_since_epoch()).count() - respond_now.load();
             responsetime_counter += elapsed;
             responsetime_max = std::max(responsetime_max.load(), elapsed);
             respond_now.store(0, std::memory_order_release);
+            reset_count++;
         }
     }};
 
@@ -149,6 +151,7 @@ TEST(RealTimeEngine, Initial)
     engine.Join();
     std::cout << "Average response time = " << (float)responsetime_counter.load()/event_count << "ms";
     std::cout <<  "  ("<<responsetime_counter.load()<<"/"<<event_count<<")\n";
+    std::cout << "Resets: " << reset_count << "\n";
     std::cout << "Worst response time = " << (float)responsetime_max.load() << "ms\n";
     std::cout << "Switched CPU " << engine.GetCPUSwitches() << " times\n";
     std::cout << "Downtime 1 " << engine.GetDowntime(0) << " us\n";
