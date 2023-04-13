@@ -1,0 +1,1 @@
+sudo setcap CAP_SYS_NICE+ep RTTests.exe ; ./RTTests.exe 
